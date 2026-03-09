@@ -1,0 +1,40 @@
+apiVersion: gateway.networking.k8s.io/v1
+kind: Gateway
+metadata:
+  name: shared-gateway
+  namespace: gateway-infra
+spec:
+  gatewayClassName: cilium
+  addresses:
+    - type: IPAddress
+      value: 192.168.1.100
+  listeners:
+    - name: https-w-sslip-io
+      protocol: HTTPS
+      port: 443
+      hostname: "*.192.168.1.100.sslip.io" # VIP from metallb
+      tls:
+        certificateRefs:
+          - kind: Secret
+            name: sslip.io-tls
+      allowedRoutes:
+        namespaces:
+          from: Selector
+          selector:
+            matchLabels:
+              prod-gateway-access: true
+# TODO Check if we need thsi for no cname url
+# - name: https-sslip-io
+#   protocol: HTTPS
+#   port: 443
+#   hostname: "192.168.1.100.sslip.io" # VIP from metallb
+#   tls:
+#     certificateRefs:
+#     - kind: Secret
+#       name: sslip.io-tls
+#   allowedRoutes:
+#     namespaces:
+#       from: Selector
+#       selector:
+#         matchLabels:
+#           project: "sslip-io"
