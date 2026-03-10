@@ -3,4 +3,4 @@ kind: Namespace
 metadata:
   name: demo-app
   labels:
-    prod-gateway-access: true
+    prod-gateway-access: "true"

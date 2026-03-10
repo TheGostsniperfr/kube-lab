@@ -22,7 +22,7 @@ spec:
           from: Selector
           selector:
             matchLabels:
-              prod-gateway-access: true
+              prod-gateway-access: "true"
 # TODO Check if we need thsi for no cname url
 # - name: https-sslip-io
 #   protocol: HTTPS

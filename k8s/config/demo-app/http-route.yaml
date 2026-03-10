@@ -10,6 +10,6 @@ spec:
   hostnames:
     - "demo.192.168.1.100.sslip.io"
   rules:
-    backendRefs:
-      - name: kube-classes-svc
-        port: 80
+    - backendRefs:
+        - name: kube-classes-svc
+          port: 80
