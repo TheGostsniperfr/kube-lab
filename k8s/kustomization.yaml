@@ -3,4 +3,7 @@ kind: Kustomization
 
 resources:
   - config/metallb/
-  - config/kube-system/ # Cilium Gateway API 
+  - config/kube-system/ # Cilium Gateway API
+  - config/gateway-infra/
+  - config/demo-app/
+  - config/cert-manager/
