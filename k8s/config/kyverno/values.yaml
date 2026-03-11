@@ -1,0 +1,30 @@
+# HA require ast least 3 replicas
+admissionController:
+  replicas: 3
+backgroundController:
+  replicas: 3
+cleanupController:
+  replicas: 3
+reportsController:
+  replicas: 3
+
+# Necessary in EKS with custom Network CNI plugin
+# https://cert-manager.io/docs/installation/compatibility/#aws-eks
+# hostNetwork: true
+
+config:
+  webhooks:
+    # Exclude namespaces
+    namespaceSelector:
+      matchExpressions:
+        - key: kubernetes.io/metadata.name
+          operator: NotIn
+          # Critical Resources
+          values:
+            - kube-system
+            - kyverno
+    # Exclude objects
+    objectSelector:
+      matchExpressions:
+        - key: webhooks.kyverno.io/exclude
+          operator: DoesNotExist
