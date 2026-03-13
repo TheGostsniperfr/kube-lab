@@ -13,3 +13,8 @@ Then you can type in your favourite browser
 ```
 https://demo.192.168.1.100.sslip.io/
 ```
+
+# Get Base64 data:
+```bash
+kubectl get secret argocd-initial-admin-secret  -n argocd -o json | jq '.data | map_values(@base64d)'
+```

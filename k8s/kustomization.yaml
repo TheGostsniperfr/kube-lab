@@ -8,3 +8,4 @@ resources:
   - config/demo-app/
   - config/cert-manager/
   - config/kyverno/
+  - config/argocd/
