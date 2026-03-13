@@ -7,3 +7,4 @@ resources:
   - config/gateway-infra/
   - config/demo-app/
   - config/cert-manager/
+  - config/argocd/
