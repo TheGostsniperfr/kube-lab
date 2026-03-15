@@ -6,4 +6,15 @@ metadata:
     app.kubernetes.io/name: argocd-cm
     app.kubernetes.io/part-of: argocd
 data:
-  kustomize.buildOptions: "--enable-helm --load-restrictor=LoadRestrictionsNone"
+  kustomize.buildOptions: |
+    # Allows Kustomize to natively render Helm charts
+    --enable-helm
+
+    # Allows Kustomize to load files outside of its current root directory (useful for shared bases)
+    --load-restrictor=LoadRestrictionsNone
+
+  resource.compareoptions: |
+    # Ignore RBAC changes made by Kubernetes aggregated roles.
+    # Without this, ArgoCD flags ClusterRoles as OutOfSync when the K8s API auto-merges rules.
+    # Ref: https://argo-cd.readthedocs.io/en/stable/user-guide/diffing/#ignoring-rbac-changes-made-by-aggregateroles
+    ignoreAggregatedRoles: true

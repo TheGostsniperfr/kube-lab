@@ -1,4 +1,6 @@
-# HA require ast least 3 replicas
+# Values: https://github.com/kyverno/kyverno/blob/main/charts/kyverno/values.yaml
+
+# HA require at least 3 replicas
 admissionController:
   replicas: 3
 backgroundController:
@@ -13,6 +15,10 @@ reportsController:
 # hostNetwork: true
 
 config:
+  # Ensure proper resource cleanup and sync status
+  # Doc: https://kyverno.io/docs/installation/platform-notes/#notes-for-argocd-users
+  preserve: false
+
   webhooks:
     # Exclude namespaces
     namespaceSelector:
