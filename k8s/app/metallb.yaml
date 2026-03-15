@@ -21,5 +21,5 @@ spec:
     targetRevision: HEAD
     path: k8s/config/metallb-system
   destination:
-    server: in-cluster
+    name: in-cluster
     namespace: metallb
