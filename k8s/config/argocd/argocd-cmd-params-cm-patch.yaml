@@ -10,9 +10,3 @@ data:
   # Disables TLS on the Argo CD server, as TLS termination is performed by the Gateway API (TLS offloading).
   # Doc: https://argo-cd.readthedocs.io/en/latest/operator-manual/ingress/#ambassador
   server.insecure: "true"
-
-  # Enable ServerSideDiff globally. This prevents continuous OutOfSync issues when
-  # Kyverno mutating webhooks modify resources (like injecting sidecars or labels)
-  # during deployment.
-  # Ref: https://kyverno.io/docs/installation/platform-notes/#notes-for-argocd-users
-  annotations.argocd.argoproj.io/compare-options: ServerSideDiff=true,IncludeMutationWebhook=true

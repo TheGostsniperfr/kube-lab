@@ -11,7 +11,6 @@ When syncing, use Server-Side Apply instead of Client-Side. This lets the Kubern
 - **Optional**: `CreateNamespace=true` if deploying to a fresh namespace.
 
 ### 2. Handle Mutating Webhooks (ServerSideDiff)
-This is actually handle globaly by `argocd-cmd-params-cm`
 To prevent ArgoCD from reporting resources as `OutOfSync` every time Kyverno injects defaults or labels, you need to tell ArgoCD to calculate diffs server-side.
 
 You can do this per-app via annotations:
