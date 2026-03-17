@@ -8,3 +8,4 @@ resources:
   - gateway-infra.yaml
   - kyverno.yaml
   - metallb.yaml
+  - keycloak.yaml
