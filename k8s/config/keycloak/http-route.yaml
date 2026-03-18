@@ -1,8 +1,8 @@
 apiVersion: gateway.networking.k8s.io/v1
 kind: HTTPRoute
 metadata:
-  name: http-app-route
-  namespace: demo-app
+  name: keycloak-http-route
+  namespace: keycloak
 spec:
   parentRefs:
     - name: shared-gateway
@@ -11,5 +11,5 @@ spec:
     - "auth.192.168.1.100.sslip.io"
   rules:
     - backendRefs:
-        - name: fixme-svc # TODO change this
+        - name: keycloakx-http
           port: 80
