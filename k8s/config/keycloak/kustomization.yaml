@@ -5,12 +5,14 @@ namespace: keycloak
 
 resources:
   - namespace.yaml
+  - secrets.yaml
   - http-route.yaml
+  - postgres.yaml
 
 helmCharts:
-  - name: keycloak
-    repo: oci://registry-1.docker.io/bitnamicharts
-    version: "25.2.0"
-    releaseName: keycloak
+  - name: keycloakx
+    repo: https://codecentric.github.io/helm-charts
+    version: "7.1.9"
+    releaseName: keycloakx
     namespace: keycloak
     valuesFile: values.yaml
