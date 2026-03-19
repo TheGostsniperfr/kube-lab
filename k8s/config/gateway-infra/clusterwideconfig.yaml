@@ -10,32 +10,17 @@ spec:
         - "80"
 
   resources:
-    - "@type": type.googleapis.com/envoy.config.cluster.v3.Cluster
-      name: "keycloak_cluster"
-      connect_timeout: 5s
-      type: STRICT_DNS
-      lb_policy: ROUND_ROBIN
-      load_assignment:
-        cluster_name: "keycloak_cluster"
-        endpoints:
-          - lb_endpoints:
-              - endpoint:
-                  address:
-                    socket_address:
-                      address: keycloakx-http.keycloak.svc.cluster.local
-                      port_value: 80
-
     - "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.Secret
       name: oauth_token_secret
       generic_secret:
         secret:
-          inline_bytes: "WkxoVnRBZ0VpS0hRWFNqYUJUbUNPOG9XQVhQSzRTVU8="
+          inline_bytes: "fixme"
 
     - "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.Secret
       name: oauth_hmac_secret
       generic_secret:
         secret:
-          inline_bytes: "YWJjZGVmZ2hpamtsbW5vcHFyc3R1dnd4eXoxMjM0NTY="
+          inline_bytes: "fixme"
 
     - "@type": type.googleapis.com/envoy.config.listener.v3.Listener
       name: cilium-gateway-gateway-infra-shared-gateway
@@ -58,7 +43,7 @@ spec:
                       "@type": type.googleapis.com/envoy.extensions.filters.http.oauth2.v3.OAuth2
                       config:
                         token_endpoint:
-                          cluster: keycloak_cluster
+                          cluster: "gateway-infra/cilium-gateway-shared-gateway/keycloak:keycloakx-http:80"
                           uri: https://auth.192.168.1.100.sslip.io/realms/kube-lab/protocol/openid-connect/token
                           timeout: 5s
                         authorization_endpoint: https://auth.192.168.1.100.sslip.io/realms/kube-lab/protocol/openid-connect/auth
