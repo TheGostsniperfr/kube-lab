@@ -9,3 +9,4 @@ resources:
   - kyverno.yaml
   - metallb.yaml
   - keycloak.yaml
+  - istio.yaml

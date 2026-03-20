@@ -1,0 +1,20 @@
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: protect-demo-app
+  namespace: gateway-infra
+spec:
+  targetRef:
+    kind: Gateway
+    group: gateway.networking.k8s.io
+    name: shared-gateway
+  action: CUSTOM
+  provider:
+    name: "oauth2-proxy"
+  rules:
+    - to:
+        - operation:
+            hosts:
+              - "demo.192.168.1.100.sslip.io"
+            notPaths:
+              - "/oauth2/*"

@@ -1,0 +1,25 @@
+# Default values: https://github.com/oauth2-proxy/manifests/blob/main/helm/oauth2-proxy/values.yaml
+
+config:
+  clientID: "envoy-demo-app"
+  existingSecret: "oauth-proxy-credentials"
+
+extraArgs:
+  provider: oidc
+  oidc-issuer-url: https://auth.192.168.1.100.sslip.io/realms/kube-lab
+  skip-provider-button: "true"
+  upstream: static://200
+  email-domain: "*"
+  cookie-secure: "true"
+  whitelist-domain: ".192.168.1.100.sslip.io"
+  cookie-domain: ".192.168.1.100.sslip.io"
+  set-xauthrequest: "true"
+  pass-access-token: "true" # X-Auth-Request-Access-Token, must first enable --set-xauthrequest
+  set-authorization-header: "true" # Authorization: Bearer <JWT>
+  scope: "openid email profile groups"
+  pass-authorization-header: "true"
+
+  ssl-insecure-skip-verify: "true" # Lab / Self-Signed Certificate
+
+service:
+  portNumber: 80

@@ -10,10 +10,10 @@ resource "keycloak_realm" "kube_lab" {
   terraform_deletion_protection = false # When set to true, the realm cannot be deleted. Defaults to false.
 
   # Theme
-  login_theme   = "base"
-  account_theme = "base"
-  admin_theme   = "base"
-  email_theme   = "base"
+  # login_theme   = "base"
+  # account_theme = "base"
+  # admin_theme   = "base"
+  # email_theme   = "base"
 
   # Best practices for token security
   access_code_lifespan     = "1h"  # The maximum amount of time a client has to finish the authorization code flow.
@@ -25,7 +25,7 @@ resource "keycloak_realm" "kube_lab" {
   registration_allowed     = true
   reset_password_allowed   = false # When true, a "forgot password" link will be displayed on the login page.
   remember_me              = true  # When true, a "remember me" checkbox will be displayed on the login page, and the user's session will not expire between browser restarts.
-  verify_email             = true  # When true, users are required to verify their email address after registration and after email address changes.
+  verify_email             = false # When true, users are required to verify their email address after registration and after email address changes.
   duplicate_emails_allowed = false # When true, multiple users will be allowed to have the same email address. This argument must be set to false if login_with_email_allowed is set to true.
 
   ssl_required    = "external"
