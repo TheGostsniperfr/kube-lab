@@ -11,6 +11,7 @@ resources:
   - secrets.yaml
   - oauth2-http-route.yaml
   - auth-policy.yaml
+  - envoy-filter-403.yaml
 
 helmCharts:
   - name: oauth2-proxy

@@ -20,6 +20,10 @@ resource "keycloak_openid_client" "envoy_demo_app" {
     "https://demo.${var.base_domain}/oauth2/callback"
   ]
 
+  valid_post_logout_redirect_uris = [
+    "https://demo.${var.base_domain}/"
+  ]
+
   web_origins = [
     "https://demo.${var.base_domain}"
   ]
