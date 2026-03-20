@@ -4,7 +4,7 @@ metadata:
   name: shared-gateway
   namespace: gateway-infra
 spec:
-  gatewayClassName: cilium
+  gatewayClassName: istio
   addresses:
     - type: IPAddress
       value: 192.168.1.100

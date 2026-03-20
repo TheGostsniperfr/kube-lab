@@ -9,3 +9,13 @@ resources:
   - gateway.yaml
   - certificate.yaml
   - secrets.yaml
+  - oauth2-http-route.yaml
+  - auth-policy.yaml
+
+helmCharts:
+  - name: oauth2-proxy
+    repo: https://oauth2-proxy.github.io/manifests
+    version: "10.1.4"
+    releaseName: oauth2-proxy
+    namespace: gateway-infra
+    valuesFile: oauth2-proxy-values.yaml
