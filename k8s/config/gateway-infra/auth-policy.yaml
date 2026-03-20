@@ -33,12 +33,11 @@ spec:
   jwtRules:
     - issuer: "https://auth.192.168.1.100.sslip.io/realms/kube-lab"
       jwksUri: "http://keycloakx-http.keycloak.svc.cluster.local/realms/kube-lab/protocol/openid-connect/certs"
-      forwardOriginalToken: false
+      forwardOriginalToken: true
 
-    # TODO When we add this rule to be able to use the admin realms to configure keycloak using terraform, it break the first rule (bad jkws...)
-    # - issuer: "https://auth.192.168.1.100.sslip.io/realms/master"
-    #   jwksUri: "http://keycloakx-http.keycloak.svc.cluster.local/realms/master/protocol/openid-connect/certs"
-    #   forwardOriginalToken: false
+    - issuer: "https://auth.192.168.1.100.sslip.io/realms/master"
+      jwksUri: "http://keycloakx-http.keycloak.svc.cluster.local/realms/master/protocol/openid-connect/certs"
+      forwardOriginalToken: true
 
 ---
 # Don't use this on Istio Zero Trust
