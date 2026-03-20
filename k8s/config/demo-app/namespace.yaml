@@ -4,4 +4,4 @@ metadata:
   name: demo-app
   labels:
     prod-gateway-access: "true"
-    istio-injection: enabled
+    # istio-injection: enabled # Use this on Istio Zero Trust
