@@ -10,7 +10,7 @@ resource "keycloak_openid_client" "envoy_demo_app" {
 
   access_type                               = "CONFIDENTIAL"
   standard_flow_enabled                     = true
-  direct_access_grants_enabled              = true
+  direct_access_grants_enabled              = false
   implicit_flow_enabled                     = false
   service_accounts_enabled                  = false
   standard_token_exchange_enabled           = false
