@@ -34,3 +34,11 @@ config:
       matchExpressions:
         - key: webhooks.kyverno.io/exclude
           operator: DoesNotExist
+
+  # Excluding network bootstrap resources to prevent deadlocks
+  # Cf issue: https://blog.zwindler.fr/2026/02/26/kyverno-a-tue-mon-api-server-encore/
+  matchConditions:
+    - name: "exclude-ServiceCIDR"
+      expression: '!(request.kind.kind == "ServiceCIDR")'
+    - name: "exclude-IPAddress"
+      expression: '!(request.kind.kind == "IPAddress")'
