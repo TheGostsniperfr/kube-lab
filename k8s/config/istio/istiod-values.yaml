@@ -13,12 +13,15 @@ meshConfig:
       envoyExtAuthzHttp:
         service: "oauth2-proxy.gateway-infra.svc.cluster.local"
         port: 80
-        includeHeadersInCheck: ["authorization", "cookie"] # headers sent to the oauth2-proxy in the check request.
-        headersToUpstreamOnAllow: [
+        # Headers sent to the oauth2-proxy in the check request.
+        includeHeadersInCheck: ["authorization", "cookie"]
+        # Headers sent to backend application when request is allowed.
+        headersToUpstreamOnAllow:
+          [
             "authorization",
-            "path",
             "x-auth-request-user",
             "x-auth-request-email",
             "x-auth-request-access-token",
-          ] # headers sent to backend application when request is allowed.
-        headersToDownstreamOnDeny: ["content-type", "set-cookie"] # headers sent back to the client when request is denied.
+          ]
+        # Headers sent back to the client when request is denied.
+        headersToDownstreamOnDeny: ["content-type", "set-cookie"]
