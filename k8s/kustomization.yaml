@@ -12,4 +12,3 @@ resources:
   - config/kyverno/
   - config/argocd/
   - config/keycloak/
-  - config/istio/
