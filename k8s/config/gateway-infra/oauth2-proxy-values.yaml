@@ -4,23 +4,38 @@ config:
   clientID: "envoy-demo-app"
   existingSecret: "oauth-proxy-credentials"
 
+# Config Doc: https://oauth2-proxy.github.io/oauth2-proxy/configuration/overview/
 extraArgs:
+  # OAuth provider
   provider: oidc
+  # OpenID Connect issuer URL
   oidc-issuer-url: https://auth.192.168.1.100.sslip.io/realms/kube-lab
+  # will skip sign-in-page to directly reach the next step: oauth/start
   skip-provider-button: "true"
+  # Http url(s) of the upstream endpoint, file:// paths for static files or static://<status_code> for static response. Routing is based on the path
   upstream: static://200
+  # Authenticate emails with the specified domain (may be given multiple times). Use * to authenticate any email
   email-domain: "*"
+  # Set secure (HTTPS only) cookie flag
   cookie-secure: "true"
+  # Refresh the cookie after this duration; 0 to disable; not supported by all providers
   cookie-refresh: "45m"
+  # Allowed domains for redirection after authentication. Prefix domain with a . or a *. to allow subdomains (e.g. .example.com, *.example.com)
   whitelist-domain: ".192.168.1.100.sslip.io"
+  # Optional cookie domains to force cookies to (e.g. .yourcompany.com). The longest domain matching the request's host will be used (or the shortest cookie domain if there is no match).
   cookie-domain: ".192.168.1.100.sslip.io"
+  # Set X-Auth-Request- responses headers.
   set-xauthrequest: "true"
-  pass-access-token: "true" # X-Auth-Request-Access-Token, must first enable --set-xauthrequest
-  set-authorization-header: "true" # Authorization: Bearer <JWT>
+  # X-Auth-Request-Access-Token, must first enable --set-xauthrequest
+  pass-access-token: "true"
+  # Set Authorization Bearer response header
+  set-authorization-header: "true"
+  # OAuth scope specification. Every provider has a default list of scopes which will be used in case no scope is configured.
   scope: "openid email profile groups"
   pass-authorization-header: "true"
 
-  ssl-insecure-skip-verify: "true" # Lab / Self-Signed Certificate
+  # Lab / Self-Signed Certificate
+  ssl-insecure-skip-verify: "true"
 
 service:
   portNumber: 80
