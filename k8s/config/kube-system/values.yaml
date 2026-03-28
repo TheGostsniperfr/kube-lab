@@ -42,10 +42,10 @@ securityContext:
 # k8sServicePort: 7445
 
 gatewayAPI:
-  enabled: true
+  enabled: false
 
-l7Proxy: true
+l7Proxy: true # default true
 
 # This require to add Envoy-related CRDs
 envoyConfig:
-  enabled: true
+  enabled: false

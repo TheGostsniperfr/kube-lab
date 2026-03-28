@@ -1,0 +1,67 @@
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: protect-demo-app
+  namespace: gateway-infra
+spec:
+  targetRef:
+    kind: Gateway
+    group: gateway.networking.k8s.io
+    name: shared-gateway
+  action: CUSTOM
+  provider:
+    name: "oauth2-proxy"
+  rules:
+    - to:
+        - operation:
+            hosts:
+              - "demo.192.168.1.100.sslip.io"
+            notPaths:
+              - "/oauth2/*"
+---
+# Don't use this on Istio Zero Trust
+apiVersion: security.istio.io/v1beta1
+kind: RequestAuthentication
+metadata:
+  name: jwt-validation-on-gateway
+  namespace: gateway-infra
+spec:
+  targetRef:
+    kind: Gateway
+    group: gateway.networking.k8s.io
+    name: shared-gateway
+  jwtRules:
+    # Kube-Lab Realms
+    - issuer: "https://auth.192.168.1.100.sslip.io/realms/kube-lab"
+      jwksUri: "http://keycloakx-http.keycloak.svc.cluster.local/realms/kube-lab/protocol/openid-connect/certs"
+      forwardOriginalToken: true # TODO Check if it can work without
+
+      # Admin Realms (for terraform access)
+    - issuer: "https://auth.192.168.1.100.sslip.io/realms/master"
+      jwksUri: "http://keycloakx-http.keycloak.svc.cluster.local/realms/master/protocol/openid-connect/certs"
+      forwardOriginalToken: true # TODO Check if it can work without
+
+---
+# Don't use this on Istio Zero Trust
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: require-dev-or-admin
+  namespace: gateway-infra
+spec:
+  targetRef:
+    kind: Gateway
+    group: gateway.networking.k8s.io
+    name: shared-gateway
+  action: DENY
+  rules:
+    - to:
+        - operation:
+            hosts:
+              - "demo.192.168.1.100.sslip.io"
+            ports: ["80", "443"]
+            notPaths:
+              - "/oauth2/*"
+      when:
+        - key: request.auth.claims[groups]
+          notValues: ["developer", "admin"]

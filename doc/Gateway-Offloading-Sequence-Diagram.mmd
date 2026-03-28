@@ -1,0 +1,72 @@
+sequenceDiagram
+    autonumber
+    actor User as Client (Browser)
+
+    box rgb(240, 248, 255) Ingress Edge - Perimeter
+        participant GW as Istio Ingress Gateway<br/>(Envoy Proxy)
+        participant O2P as OAuth2-Proxy<br/>(ext_authz)
+    end
+
+    box rgb(255, 245, 238) Identity Provider
+        participant IDP as Keycloak<br/>(OIDC)
+    end
+
+    box rgb(240, 255, 240) Internal Cluster Network
+        participant App as Demo App<br/>(Naked Container)
+    end
+
+    %% Phase 1: Unauthenticated Access Attempt
+    rect rgb(250, 250, 250)
+        Note over User, App: Phase 1: Unauthenticated Request Interception
+        User->>GW: GET https://demo.example.com/
+        GW->>O2P: gRPC/HTTP Check (ext_authz)<br/>Headers: No Cookie
+        O2P-->>GW: HTTP 401 Unauthorized<br/>(Needs Authentication)
+        GW-->>User: HTTP 302 Found<br/>Location: /oauth2/start
+    end
+
+    %% Phase 2: OIDC Authorization Code Flow
+    rect rgb(250, 250, 250)
+        Note over User, IDP: Phase 2: OpenID Connect Authorization Code Flow
+        User->>GW: GET /oauth2/start
+        GW->>O2P: Forward Request (ext_authz bypassed)
+        O2P-->>User: HTTP 302 Redirect to IDP
+        User->>IDP: GET /auth/realms/kube-lab/protocol/openid-connect/auth...
+        IDP-->>User: Present Login UI
+        User->>IDP: Submit Credentials
+        IDP-->>User: HTTP 302 Redirect<br/>Location: /oauth2/callback?code=XYZ
+    end
+
+    %% Phase 3: Token Exchange & Session Initialization
+    rect rgb(250, 250, 250)
+        Note over User, IDP: Phase 3: Token Exchange & Secure Session Creation
+        User->>GW: GET /oauth2/callback?code=XYZ
+        GW->>O2P: Forward Callback Request
+        O2P->>IDP: POST /token (Exchange 'code' for Tokens)
+        IDP-->>O2P: Return ID Token & Access Token (JWT)
+        Note over O2P: Encrypt tokens into a secure session cookie
+        O2P-->>GW: HTTP 302 Redirect to /<br/>Set-Cookie: _oauth2_proxy=encrypted_payload...
+        GW-->>User: HTTP 302 Redirect to /<br/>(with Session Cookie)
+    end
+
+    %% Phase 4: Authenticated Access & Gateway Native Validation
+    rect rgb(250, 250, 250)
+        Note over User, App: Phase 4: Gateway Edge Authentication & RBAC Verification
+        User->>GW: GET https://demo.example.com/<br/>Cookie: _oauth2_proxy=...
+
+        GW->>O2P: gRPC/HTTP Check (ext_authz)<br/>Pass Cookie
+        Note over O2P: Validate Session Cookie,<br/>Extract upstream Access Token (JWT)
+        O2P-->>GW: HTTP 200 OK<br/>Inject Header: Authorization: Bearer <JWT>
+
+        Note over GW: 1. RequestAuthentication (Gateway):<br/>Fetch Keycloak JWKS & verify JWT signature/expiry
+        Note over GW: 2. AuthorizationPolicy (Gateway):<br/>Evaluate RBAC constraints (e.g., claims[groups])
+
+        alt User lacks required role
+            Note over GW: EnvoyFilter intercepts 403 Forbidden status
+            GW-->>User: Return Custom HTML "Access Denied" + Logout Button
+        else User is authorized
+            Note over GW: Request is cleared! Forwarding to naked backend.
+            GW->>App: GET / (Direct HTTP traffic)
+            App-->>GW: HTTP 200 OK (Application Payload)
+            GW-->>User: HTTP 200 OK (Application UI rendered)
+        end
+    end
