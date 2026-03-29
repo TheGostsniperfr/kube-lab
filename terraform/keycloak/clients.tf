@@ -27,6 +27,10 @@ resource "keycloak_openid_client" "envoy_demo_app" {
   web_origins = [
     "https://demo.${var.base_domain}"
   ]
+
+  authentication_flow_binding_overrides {
+    browser_id = keycloak_authentication_flow.browser_demo_app.id
+  }
 }
 
 # -----------------------------------------------------------------------------
