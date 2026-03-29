@@ -88,3 +88,19 @@ extraEnv: |
   - name: JAVA_OPTS_APPEND
     value: >-
       -Djgroups.dns.query=keycloak-keycloakx-headless
+
+extraVolumes: |
+  - name: theme-providers
+    emptyDir: {}
+
+extraVolumeMounts: |
+  - name: theme-providers
+    mountPath: /opt/keycloak/providers
+
+extraInitContainers: |
+  - name: theme-provider-init
+    image: ghcr.io/thegostsniperfr/keycloak-theme-kube-lab:latest
+    imagePullPolicy: Always
+    volumeMounts:
+      - name: theme-providers
+        mountPath: /providers
