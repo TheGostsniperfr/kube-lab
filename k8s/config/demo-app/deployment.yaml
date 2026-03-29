@@ -22,8 +22,8 @@ spec:
             - containerPort: 80
           env:
             - name: STUDENT_NAME
-              value: "Cilium Lab User"
+              value: "Envoy Lab User"
             - name: MISSION_STATEMENT
-              value: "Validation du stack Cilium Gateway API + MetalLB"
+              value: "Validation du stack Envoy Gateway API + Keycloak + MetalLB"
             - name: APP_VERSION
-              value: "v1.0 - Gateway Mode"
+              value: "1.0 - Gateway Mode"
