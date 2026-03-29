@@ -10,7 +10,7 @@ resource "keycloak_realm" "kube_lab" {
   terraform_deletion_protection = false # When set to true, the realm cannot be deleted. Defaults to false.
 
   # Theme
-  # login_theme   = "base"
+  login_theme = "keycloak-theme-kube-lab"
   # account_theme = "base"
   # admin_theme   = "base"
   # email_theme   = "base"
