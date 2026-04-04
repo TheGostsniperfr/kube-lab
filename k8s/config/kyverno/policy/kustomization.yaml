@@ -6,3 +6,4 @@ namespace: kyverno
 resources:
   - require-team-label-validation-policy.yaml
   # - add-team-label-mutating-policy.yaml
+  - require-resources-and-memory-limits.yaml
