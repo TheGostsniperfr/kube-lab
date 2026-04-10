@@ -11,50 +11,45 @@ spec:
 
   oidc:
     provider:
-      issuer: "https://auth.192.168.1.100.sslip.io/realms/kube-lab"
-      authorizationEndpoint: "https://auth.192.168.1.100.sslip.io/realms/kube-lab/protocol/openid-connect/auth"
-      tokenEndpoint: "https://auth.192.168.1.100.sslip.io/realms/kube-lab/protocol/openid-connect/token"
-      backendRefs:
-        - group: ""
-          kind: Service
-          name: keycloakx-http
-          namespace: keycloak
-          port: 80
-
-    clientID: "envoy-demo-app"
+      issuer: "https://gitlab.com"
+    clientID: "782e46d7a1dff0ddf1d98f2d9cef15ddabd659e0f7c76cb04d9b24eb1839a297"
     clientSecret:
-      name: envoy-demo-app-secret
+      name: gitlab-application-secret
     redirectURL: "https://demo.192.168.1.100.sslip.io/oauth2/callback"
     logoutPath: "/logout"
+    cookieNames:
+      idToken: "gitlab-id-token"
     scopes:
       - openid
-      - email
       - profile
-      - groups
-    cookieNames:
-      accessToken: "keycloak-access-token"
+      - email
 
   jwt:
     providers:
-      - name: keycloak-jwt-provider
-        issuer: "https://auth.192.168.1.100.sslip.io/realms/kube-lab"
+      - name: gitlab-jwt-provider
+        issuer: "https://gitlab.com"
         remoteJWKS:
-          uri: "http://keycloakx-http.keycloak.svc.cluster.local/realms/kube-lab/protocol/openid-connect/certs"
+          uri: "https://gitlab.com/oauth/discovery/keys"
         extractFrom:
           cookies:
-            - "keycloak-access-token"
+            - "gitlab-id-token"
 
-  # authorization:
-  #   defaultAction: Deny
-  #   rules:
-  #     - name: "allow-dev-and-sre"
-  #       action: Allow
-  #       principal:
-  #         jwt:
-  #           provider: keycloak-jwt-provider
-  #           claims:
-  #             - name: groups
-  #               valueType: StringArray
-  #               values:
-  #                 # - "developer"
-  #                 - "sre"
+  authorization:
+    defaultAction: Deny
+    rules:
+      - name: "allow-specific-ips-and-gitlab-group"
+        action: Allow
+        principal:
+          clientCIDRs:
+            - 82.65.250.241/32
+            - 10.42.0.0/16
+            - 10.0.0.0/16
+            - 192.168.42.0/16
+
+          jwt:
+            provider: gitlab-jwt-provider
+            claims:
+              - name: groups_direct
+                valueType: StringArray
+                values:
+                  - "sre"

@@ -10,3 +10,4 @@ resources:
   - http-route.yaml
   - secrets.yaml
   - security-policy.yaml
+  - gitlab-application-secret.yaml
