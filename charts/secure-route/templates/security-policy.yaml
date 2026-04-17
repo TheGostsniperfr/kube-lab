@@ -17,7 +17,6 @@ spec:
     clientID: "{{ $.Values.global.authClientId }}"
     clientSecret:
       name: gitlab-oidc-secret
-      namespace: "{{ $.Values.global.gatewayNamespace }}"
     redirectURL: "https://{{ $routeConfig.ingress.hostname }}/oauth2/callback"
     logoutPath: "/logout"
     cookieNames:
