@@ -20,11 +20,11 @@ spec:
 
   sources:
     - repoURL: https://github.com/TheGostsniperfr/kube-lab.git
-      targetRevision: HEAD
+      targetRevision: feat/envoy-gateway-jwt-claim-based
       path: k8s/config/demo-app
 
     - repoURL: https://github.com/TheGostsniperfr/kube-lab.git
-      targetRevision: HEAD
+      targetRevision: feat/envoy-gateway-jwt-claim-based
       path: charts/secure-route
       helm:
         values: |
