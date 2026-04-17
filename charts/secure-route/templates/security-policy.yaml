@@ -45,7 +45,7 @@ spec:
           jwt:
             provider: gitlab-jwt-provider
             claims:
-              - name: "groups"
+              - name: "groups_direct"
                 valueType: StringArray
                 values:
 {{ toYaml $routeConfig.auth.allowedGroups | indent 18 }}

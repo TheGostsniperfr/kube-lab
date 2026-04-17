@@ -40,4 +40,4 @@ spec:
               auth:
                 enabled: true
                 allowedGroups:
-                  - "TheGostsniperfr/gitlab-application"
+                  - "thegostsniperfr-group
