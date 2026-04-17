@@ -8,10 +8,6 @@ spec:
     - group: gateway.envoyproxy.io
       kind: SecurityPolicy
       namespace: demo-app
-
-    - group: gateway.envoyproxy.io
-      kind: SecurityPolicy
-      namespace: demo-app-public
   to:
     - group: ""
       kind: Secret
