@@ -4,8 +4,9 @@ kind: Kustomization
 namespace: gateway-infra
 
 resources:
-  # - github.com/kubernetes-sigs/gateway-api/config/crd/experimental?ref=v1.5.0
   - namespace.yaml
   - gateway.yaml
   - certificate.yaml
   - secrets.yaml
+  - gitlab-secret.yaml
+  - reference-grant-gitlab.yaml

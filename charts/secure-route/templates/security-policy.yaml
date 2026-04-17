@@ -1,21 +1,24 @@
+{{- range $routeName, $routeConfig := .Values.routes }}
+{{- if $routeConfig.auth.enabled }}
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: SecurityPolicy
 metadata:
-  name: require-oidc-and-authz
-  namespace: demo-app
+  name: "{{ $routeName }}-auth"
+  namespace: "{{ $.Release.Namespace }}"
 spec:
   targetRefs:
     - group: gateway.networking.k8s.io
       kind: HTTPRoute
-      name: http-app-route
+      name: "{{ $routeName }}-route"
 
   oidc:
     provider:
       issuer: "https://gitlab.com"
-    clientID: "782e46d7a1dff0ddf1d98f2d9cef15ddabd659e0f7c76cb04d9b24eb1839a297"
+    clientID: "{{ $.Values.global.authClientId }}"
     clientSecret:
-      name: gitlab-application-secret
-    redirectURL: "https://demo.192.168.1.100.sslip.io/oauth2/callback"
+      name: gitlab-oidc-secret
+      namespace: gateway-infra
+    redirectURL: "https://{{ $routeConfig.ingress.hostname }}/oauth2/callback"
     logoutPath: "/logout"
     cookieNames:
       idToken: "gitlab-id-token"
@@ -37,19 +40,16 @@ spec:
   authorization:
     defaultAction: Deny
     rules:
-      - name: "allow-specific-ips-and-gitlab-group"
+      - name: "allow-gitlab-groups"
         action: Allow
         principal:
-          clientCIDRs:
-            - 82.65.250.241/32
-            - 10.42.0.0/16
-            - 10.0.0.0/16
-            - 192.168.42.0/16
-
           jwt:
             provider: gitlab-jwt-provider
             claims:
-              - name: groups_direct
+              - name: "groups"
                 valueType: StringArray
                 values:
-                  - "sre"
+{{ toYaml $routeConfig.auth.allowedGroups | indent 18 }}
+---
+{{- end }}
+{{- end }}

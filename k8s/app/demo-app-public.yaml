@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: demo-app
+  name: public-demo-app
   namespace: argocd
   annotations:
     argocd.argoproj.io/compare-options: ServerSideDiff=true,IncludeMutationWebhook=true
@@ -9,7 +9,7 @@ spec:
   project: default
   destination:
     name: in-cluster
-    namespace: demo-app
+    namespace: demo-app-public
   syncPolicy:
     automated:
       prune: true
@@ -21,23 +21,21 @@ spec:
   sources:
     - repoURL: https://github.com/TheGostsniperfr/kube-lab.git
       targetRevision: HEAD
-      path: k8s/config/demo-app
+      path: k8s/config/demo-app-public
 
     - repoURL: https://github.com/TheGostsniperfr/kube-lab.git
       targetRevision: HEAD
       path: charts/secure-route
       helm:
         values: |
-          nameOverride: "demo-app"
+          nameOverride: "demo-app-public"
 
           targetService:
             name: "kube-classes-svc"
             port: 80
 
           ingress:
-            hostname: "demo.192.168.1.100.sslip.io"
+            hostname: "public-demo.192.168.1.100.sslip.io"
 
           auth:
-            enabled: true
-            allowedGroups:
-              - "TheGostsniperfr/gitlab-application"
+            enabled: false
