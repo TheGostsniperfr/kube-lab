@@ -28,16 +28,16 @@ spec:
       path: charts/secure-route
       helm:
         values: |
-          nameOverride: "demo-app"
+          routes:
+            demo-app:
+              targetService:
+                name: "kube-classes-svc"
+                port: 80
 
-          targetService:
-            name: "kube-classes-svc"
-            port: 80
+              ingress:
+                hostname: "demo.192.168.1.100.sslip.io"
 
-          ingress:
-            hostname: "demo.192.168.1.100.sslip.io"
-
-          auth:
-            enabled: true
-            allowedGroups:
-              - "TheGostsniperfr/gitlab-application"
+              auth:
+                enabled: true
+                allowedGroups:
+                  - "TheGostsniperfr/gitlab-application"
