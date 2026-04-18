@@ -10,3 +10,4 @@ resources:
   - secrets.yaml
   - gitlab-secret.yaml
   - reference-grant-gitlab.yaml
+  - custom-403-patch.yaml
