@@ -18,5 +18,5 @@ helmCharts:
     version: v1.7.1
     releaseName: envoy-gateway-system
     namespace: envoy-gateway-system
-    # valuesFile: values.yaml
+    valuesFile: values.yaml
     includeCRDs: true

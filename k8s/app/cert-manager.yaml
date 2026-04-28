@@ -6,7 +6,7 @@ metadata:
   annotations:
     argocd.argoproj.io/compare-options: ServerSideDiff=true,IncludeMutationWebhook=true
   finalizers:
-    - resources-finalizer.argocd.argoproj.io
+    - argocd.argoproj.io/resources-finalizer
 spec:
   syncPolicy:
     automated:
@@ -18,7 +18,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/TheGostsniperfr/kube-lab.git
-    targetRevision: HEAD
+    targetRevision: feat/envoy-gateway-jwt-claim-based
     path: k8s/config/cert-manager
   destination:
     name: in-cluster

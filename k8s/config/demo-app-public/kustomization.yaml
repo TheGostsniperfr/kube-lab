@@ -1,10 +1,9 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-namespace: gateway-infra
+namespace: demo-app-public
 
 resources:
   - namespace.yaml
-  - gateway.yaml
-  - certificate.yaml
-  - custom-403-patch.yaml
+  - deployment.yaml
+  - service.yaml
