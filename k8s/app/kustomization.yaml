@@ -3,10 +3,10 @@ kind: Kustomization
 
 resources:
   - cert-manager.yaml
-  - cilium.yaml
   - demo-app.yaml
+  - demo-app-public.yaml
   - gateway-infra.yaml
   - kyverno.yaml
   - metallb.yaml
-  - keycloak.yaml
+  # - keycloak.yaml
   - envoy-gateway.yaml

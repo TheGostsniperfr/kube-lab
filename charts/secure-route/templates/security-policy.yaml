@@ -1,0 +1,54 @@
+{{- range $routeName, $routeConfig := .Values.routes }}
+{{- if $routeConfig.auth.enabled }}
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: SecurityPolicy
+metadata:
+  name: "{{ $routeName }}-auth"
+  namespace: "{{ $.Release.Namespace }}"
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: HTTPRoute
+      name: "{{ $routeName }}-route"
+
+  oidc:
+    provider:
+      issuer: "https://gitlab.com"
+    clientID: "{{ $.Values.global.authClientId }}"
+    clientSecret:
+      name: gitlab-oidc-secret
+    redirectURL: "https://{{ $routeConfig.ingress.hostname }}/oauth2/callback"
+    logoutPath: "/logout"
+    cookieNames:
+      idToken: "gitlab-id-token"
+    scopes:
+      - openid
+      - profile
+      - email
+
+  jwt:
+    providers:
+      - name: gitlab-jwt-provider
+        issuer: "https://gitlab.com"
+        remoteJWKS:
+          uri: "https://gitlab.com/oauth/discovery/keys"
+        extractFrom:
+          cookies:
+            - "gitlab-id-token"
+
+  authorization:
+    defaultAction: Deny
+    rules:
+      - name: "allow-gitlab-groups"
+        action: Allow
+        principal:
+          jwt:
+            provider: gitlab-jwt-provider
+            claims:
+              - name: "groups_direct"
+                valueType: StringArray
+                values:
+{{ toYaml $routeConfig.auth.allowedGroups | indent 18 }}
+---
+{{- end }}
+{{- end }}

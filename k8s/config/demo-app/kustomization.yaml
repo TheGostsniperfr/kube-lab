@@ -7,6 +7,4 @@ resources:
   - namespace.yaml
   - deployment.yaml
   - service.yaml
-  - http-route.yaml
-  - secrets.yaml
-  - security-policy.yaml
+  - gitlab-secret.yaml

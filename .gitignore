@@ -1,4 +1,4 @@
-charts/
+k8s/**/charts/
 .terraform/
 */terraform.tfstate
 */terraform.tfstate.backup

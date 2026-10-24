@@ -5,9 +5,11 @@ metadata:
   namespace: argocd
   annotations:
     argocd.argoproj.io/compare-options: ServerSideDiff=true,IncludeMutationWebhook=true
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
 spec:
+  project: default
+  destination:
+    name: in-cluster
+    namespace: demo-app
   syncPolicy:
     automated:
       prune: true
@@ -15,11 +17,27 @@ spec:
     syncOptions:
       - ServerSideApply=true
       - CreateNamespace=true
-  project: default
-  source:
-    repoURL: https://github.com/TheGostsniperfr/kube-lab.git
-    targetRevision: HEAD
-    path: k8s/config/demo-app
-  destination:
-    name: in-cluster
-    namespace: demo-app
+
+  sources:
+    - repoURL: https://github.com/TheGostsniperfr/kube-lab.git
+      targetRevision: feat/envoy-gateway-jwt-claim-based
+      path: k8s/config/demo-app
+
+    - repoURL: https://github.com/TheGostsniperfr/kube-lab.git
+      targetRevision: feat/envoy-gateway-jwt-claim-based
+      path: charts/secure-route
+      helm:
+        values: |
+          routes:
+            demo-app:
+              targetService:
+                name: "kube-classes-svc"
+                port: 80
+
+              ingress:
+                hostname: "demo.192.168.1.100.sslip.io"
+
+              auth:
+                enabled: true
+                allowedGroups:
+                  - "thegostsniperfr-group"

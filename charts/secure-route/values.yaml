@@ -1,0 +1,24 @@
+global:
+  gatewayName: "shared-gateway"
+  gatewayNamespace: "gateway-infra"
+  authClientId: "782e46d7a1dff0ddf1d98f2d9cef15ddabd659e0f7c76cb04d9b24eb1839a297"
+
+routes: {}
+  # demo-frontend:
+  #   targetService:
+  #     name: "kube-classes-svc"
+  #     port: 80
+  #   ingress:
+  #     hostname: "demo.192.168.1.100.sslip.io"
+  #   auth:
+  #     enabled: true
+  #     allowedGroups:
+  #       - "my-org/sre"
+  # demo-api:
+  #   targetService:
+  #     name: "kube-classes-api-svc"
+  #     port: 8080
+  #   ingress:
+  #     hostname: "api.demo.192.168.1.100.sslip.io"
+  #   auth:
+  #     enabled: false # This one is public

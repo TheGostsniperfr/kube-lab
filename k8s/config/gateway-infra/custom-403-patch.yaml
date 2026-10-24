@@ -1,0 +1,57 @@
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: EnvoyPatchPolicy
+metadata:
+  name: custom-403-rbac
+  namespace: gateway-infra
+spec:
+  targetRef:
+    group: gateway.networking.k8s.io
+    kind: Gateway
+    name: shared-gateway
+  type: JSONPatch
+  jsonPatches:
+    - type: "type.googleapis.com/envoy.config.listener.v3.Listener"
+      name: "gateway-infra/shared-gateway/https-w-sslip-io"
+      operation:
+        op: add
+        path: "/filter_chains/0/filters/0/typed_config/local_reply_config"
+        value:
+          mappers:
+            - filter:
+                status_code_filter:
+                  comparison:
+                    op: EQ
+                    value:
+                      default_value: 403
+                      runtime_key: "not_used"
+              status_code: 403
+              body:
+                inline_string: |
+                  <!DOCTYPE html>
+                  <html>
+                    <body style="font-family: sans-serif; text-align: center; padding-top: 50px; background-color: #f4f4f9;">
+                      <h1 style="color: #333;">403 - Access Denied</h1>
+                      <p style="color: #666;">Your account does not have the required permissions.</p>
+
+                      <div style="margin: 30px auto; max-width: 520px; text-align: left; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                        <p><b>To switch accounts:</b></p>
+                        <ol>
+                          <li>Click the button below to open GitLab.</li>
+                          <li><strong>Manually Sign Out</strong> using your profile icon (top right corner).</li>
+                          <li>Return to this application to sign in with a different account.</li>
+                        </ol>
+                      </div>
+
+                      <a href="https://gitlab.com/" style="padding: 10px 20px; background-color: #d9534f; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;">
+                        Go to GitLab to Sign Out
+                      </a>
+
+                      <script>
+                        fetch('/logout', { redirect: 'manual' }).catch(e => console.error(e));
+                      </script>
+                    </body>
+                  </html>
+              body_format_override:
+                content_type: "text/html; charset=UTF-8"
+                text_format_source:
+                  inline_string: "%LOCAL_REPLY_BODY%"

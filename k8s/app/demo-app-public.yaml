@@ -1,0 +1,41 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: public-demo-app
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/compare-options: ServerSideDiff=true,IncludeMutationWebhook=true
+spec:
+  project: default
+  destination:
+    name: in-cluster
+    namespace: demo-app-public
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - ServerSideApply=true
+      - CreateNamespace=true
+
+  sources:
+    - repoURL: https://github.com/TheGostsniperfr/kube-lab.git
+      targetRevision: feat/envoy-gateway-jwt-claim-based
+      path: k8s/config/demo-app-public
+
+    - repoURL: https://github.com/TheGostsniperfr/kube-lab.git
+      targetRevision: feat/envoy-gateway-jwt-claim-based
+      path: charts/secure-route
+      helm:
+        values: |
+          routes:
+            public-demo:
+              targetService:
+                name: "kube-classes-svc"
+                port: 80
+
+              ingress:
+                hostname: "public-demo.192.168.1.100.sslip.io"
+
+              auth:
+                enabled: false
